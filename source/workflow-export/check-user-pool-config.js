@@ -26,9 +26,9 @@ exports.handler = async (event) => {
     const describeUserPoolResponse = await cognitoISP.describeUserPool(describeUserPoolParams);
     console.log(`Describe user pool response: ${JSON.stringify(describeUserPoolResponse, null, 2)}`);
 
-    if (describeUserPoolResponse.UserPool.MfaConfiguration && describeUserPoolResponse.UserPool.MfaConfiguration !== 'OFF') {
-        throw new Error(`User Pools with MFA enabled are not supported. The user pool\'s MFA configuration is set to ${describeUserPoolResponse.UserPool.MfaConfiguration}`);
-    }
+    // if (describeUserPoolResponse.UserPool.MfaConfiguration && describeUserPoolResponse.UserPool.MfaConfiguration !== 'OFF') {
+    //     throw new Error(`User Pools with MFA enabled are not supported. The user pool\'s MFA configuration is set to ${describeUserPoolResponse.UserPool.MfaConfiguration}`);
+    // }
 
     if (describeUserPoolResponse.UserPool.UsernameAttributes) {
         if (describeUserPoolResponse.UserPool.UsernameAttributes.length > 1) {

@@ -1951,7 +1951,7 @@ Resources:
     Condition: IsPrimaryRegion
     Properties:
       Description: Starts a state machine for the Export Workflow of the Cognito User Profiles Export Reference Architecture
-      ScheduleExpression: !If [ExportDaily, "rate(1 day)", !If [ExportWeekly, "rate(7 days)", "rate(30 days)"]]
+      ScheduleExpression: !If [ExportDaily, "cron(0 13 * * ? *)", !If [ExportWeekly, "rate(7 days)", "rate(30 days)"]]
       State: ENABLED
       Targets:
         - Id: export-workflow-event-rule-target

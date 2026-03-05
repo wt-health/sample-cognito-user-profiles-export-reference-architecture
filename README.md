@@ -76,8 +76,8 @@ aws s3api head-bucket --bucket $DIST_OUTPUT_BUCKET-$SECONDARY_REGION --expected-
 
 * Deploy the distributable to an Amazon S3 bucket in your account. _Note:_ you must have the AWS Command Line Interface installed.
 ```bash
-aws s3 cp ./regional-s3-assets/ s3://$DIST_OUTPUT_BUCKET-$REGION/$SOLUTION_NAME/$VERSION/ --recursive --acl bucket-owner-full-control
-aws s3 cp ./regional-s3-assets/ s3://$DIST_OUTPUT_BUCKET-$SECONDARY_REGION/$SOLUTION_NAME/$VERSION/ --recursive --acl bucket-owner-full-control
+aws s3 cp ./regional-s3-assets/ s3://$DIST_OUTPUT_BUCKET-$REGION/$SOLUTION_NAME/$VERSION/ --recursive --acl bucket-owner-full-control --region $REGION
+aws s3 cp ./regional-s3-assets/ s3://$DIST_OUTPUT_BUCKET-$SECONDARY_REGION/$SOLUTION_NAME/$VERSION/ --recursive --acl bucket-owner-full-control --region $SECONDARY_REGION
 ```
 
 ### 8. Launch the Cognito User Profiles Export Reference Architecture

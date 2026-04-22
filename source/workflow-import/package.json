@@ -16,19 +16,19 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.403.0",
-    "@aws-sdk/client-dynamodb": "^3.398.0",
-    "@aws-sdk/client-s3": "^3.400.0",
-    "@aws-sdk/client-sqs": "^3.398.0",
-    "@aws-sdk/lib-dynamodb": "^3.398.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.1034.0",
+    "@aws-sdk/client-dynamodb": "^3.1034.0",
+    "@aws-sdk/client-s3": "^3.1034.0",
+    "@aws-sdk/client-sqs": "^3.1034.0",
+    "@aws-sdk/lib-dynamodb": "^3.1034.0",
     "@aws-sdk/node-http-handler": "^3.374.0",
-    "aws-sdk-client-mock": "^3.0.0",
-    "axios-mock-adapter": "^1.19.0",
+    "aws-sdk-client-mock": "^3.1.0",
+    "axios-mock-adapter": "^1.22.0",
     "jest": "^29.7.0"
   },
   "dependencies": {
-    "axios": "^1.8.2",
-    "uuid": "^8.3.0"
+    "axios": "^1.15.2",
+    "uuid": "^8.3.2"
   },
   "overrides": {
     "fast-xml-parser": ">=4.4.1"

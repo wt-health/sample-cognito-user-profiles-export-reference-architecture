@@ -22,9 +22,9 @@ For more information, review the [detailed deployment guide](./documentation/cog
 ### 1. Prerequsites
 The following procedures assumes that all of the OS-level configuration has been completed. They are:
 - [AWS Command Line Interface](https://aws.amazon.com/cli/)
-- Node.js 18.x / 20.x
+- Node.js 22.x / 24.x
 
-The Cognito User Profiles Export Reference Architecture is developed with Node.js for the microservices that run in AWS Lambda. The latest version has been tested with Node.js 18.x/20.x.
+The Cognito User Profiles Export Reference Architecture is developed with Node.js for the microservices that run in AWS Lambda. The latest version has been tested with Node.js 22.x/24.x.
 
 ### 2. Clone the Cognito User Profiles Export Reference Architecture repository
 Clone the ```sample-cognito-user-profiles-export-reference-architecture``` GitHub repositroy, then make the desired code changes.
@@ -123,6 +123,37 @@ aws s3 cp ./regional-s3-assets/ s3://$DIST_OUTPUT_BUCKET-$SECONDARY_REGION/$SOLU
     |- scan-table.js                                            [ Scans the backup table and queues items for the Import Workflow ]
     |- update-new-users.js                                      [ Updates users that have been imported to the new user pool ]
 ```
+
+## Updating and Auditing Dependencies
+
+The `update-and-audit.sh` script automates dependency maintenance across all Node.js packages in the `source/` directory. For each subfolder that contains a `package.json`, it:
+
+1. Installs dependencies from the lockfile (`npm ci`)
+2. Updates all packages to their latest allowed versions and saves them (`npm update --save`)
+3. Audits the updated dependencies for known vulnerabilities (`npm audit`)
+
+### Usage
+
+Run from the repository root:
+
+```bash
+chmod +x ./update-and-audit.sh
+./update-and-audit.sh
+```
+
+No arguments are required. The script resolves the `source/` directory relative to its own location.
+
+### Output
+
+- Each folder is processed in sequence with progress printed to stdout.
+- If vulnerabilities are found in any folder, a warning is printed but processing continues for the remaining folders.
+- At the end, all folders with vulnerabilities are listed and the script exits with code `1`.
+- If no vulnerabilities are found, the script exits with code `0`.
+
+### Requirements
+
+- Node.js 22.x or 24.x
+- `npm` available in `PATH`
 
 ## Collection of operational metrics
 

@@ -16,7 +16,7 @@
 #   1 - One or more folders have vulnerabilities; affected folders are listed at the end
 #
 # Requirements:
-#   - Node.js 22.x or 24.x
+#   - Node.js 24.x (22.x also supported)
 #   - npm available in PATH
 
 set -e

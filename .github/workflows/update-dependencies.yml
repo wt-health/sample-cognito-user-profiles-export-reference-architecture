@@ -1,0 +1,49 @@
+name: Update Dependencies
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Run update and audit script
+        run: |
+          chmod +x ./update-and-audit.sh
+          ./update-and-audit.sh
+
+      - name: Create branch and open PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="chore/dependency-updates-$(date +%Y%m%d%H%M%S)"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+          git add source/*/package.json source/*/package-lock.json
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+
+          git commit -m "chore: update npm dependencies"
+          git push origin "$BRANCH"
+
+          gh pr create \
+            --title "chore: update npm dependencies" \
+            --body "Automated dependency update via \`update-and-audit.sh\`. All packages updated to their latest allowed versions and audited for vulnerabilities." \
+            --base main \
+            --head "$BRANCH" \
+            --reviewer nandogameiro

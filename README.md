@@ -152,7 +152,7 @@ No arguments are required. The script resolves the `source/` directory relative 
 
 ### Requirements
 
-- Node.js 22.x or 24.x
+- Node.js 24.x (22.x also supported)
 - `npm` available in `PATH`
 
 ## Collection of operational metrics

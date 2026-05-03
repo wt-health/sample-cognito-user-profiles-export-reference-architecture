@@ -21,6 +21,8 @@ jobs:
           node-version: 24
 
       - name: Run update and audit script
+        id: audit
+        continue-on-error: true
         run: |
           chmod +x ./update-and-audit.sh
           ./update-and-audit.sh
@@ -28,6 +30,7 @@ jobs:
       - name: Create branch and open PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AUDIT_FAILED: ${{ steps.audit.outcome == 'failure' }}
         run: |
           BRANCH="chore/dependency-updates-$(date +%Y%m%d%H%M%S)"
 
@@ -41,9 +44,16 @@ jobs:
           git commit -m "chore: update npm dependencies"
           git push origin "$BRANCH"
 
+          if [[ "$AUDIT_FAILED" == "true" ]]; then
+            BODY="⚠️ **Vulnerabilities detected.** Automated dependency update via \`update-and-audit.sh\`. Review the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details before merging."
+          else
+            BODY="✅ Automated dependency update via \`update-and-audit.sh\`. All packages updated to their latest allowed versions and audited for vulnerabilities."
+          fi
+
           gh pr create \
             --title "chore: update npm dependencies" \
-            --body "Automated dependency update via \`update-and-audit.sh\`. All packages updated to their latest allowed versions and audited for vulnerabilities." \
+            --body "$BODY" \
             --base main \
             --head "$BRANCH" \
             --reviewer nandogameiro
+

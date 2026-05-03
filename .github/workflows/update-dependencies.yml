@@ -53,7 +53,7 @@ jobs:
           gh pr create \
             --title "chore: update npm dependencies" \
             --body "$BODY" \
-            --base main \
+            --base disable-mfa-requirement \
             --head "$BRANCH" \
             --reviewer nandogameiro
 

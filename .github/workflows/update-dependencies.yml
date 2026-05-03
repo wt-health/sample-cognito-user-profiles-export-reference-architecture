@@ -29,6 +29,12 @@ jobs:
           chmod +x ./update-and-audit.sh
           ./update-and-audit.sh
 
+      - name: Run unit tests
+        run: |
+          cd ./deployment
+          chmod +x ./run-unit-tests.sh
+          ./run-unit-tests.sh
+
       - name: Create branch and open PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

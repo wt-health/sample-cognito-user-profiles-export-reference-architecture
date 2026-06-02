@@ -23,7 +23,7 @@
     "clean": "rm -rf dist/ node_modules/ coverage/",
     "test": "jest test/*.spec.js --coverage --silent",
     "package:zip": "cd dist && zip -rq package.zip .",
-    "package:dist": "mkdir dist && rsync -avr ../utils ./dist/ && rsync -avr --exclude=*test* --exclude=*dist* --exclude=*node_modules* ./ ./dist/$npm_package_name && rsync -avr ./node_modules ./dist/$npm_package_name",
+    "package:dist": "mkdir dist && rsync -avr ../utils ./dist/ && rsync -avr --exclude=*test* --exclude=*dist* --exclude=*node_modules* ./ ./dist/$npm_package_name && mkdir -p ./node_modules && rsync -avr ./node_modules ./dist/$npm_package_name",
     "package": "npm run clean && npm install --production && npm run package:dist && npm run package:zip",
     "build": "npm run clean && npm install"
   }

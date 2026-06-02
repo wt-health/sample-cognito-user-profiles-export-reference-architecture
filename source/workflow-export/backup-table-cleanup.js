@@ -18,7 +18,7 @@ const {
 const dynamodbClient = new DynamoDBClient(getOptions());
 const docClient = DynamoDBDocumentClient.from(dynamodbClient);
 const sqs = new SQS(getOptions());
-const uuid = require('uuid');
+const { randomUUID } = require('crypto');
 const { BACKUP_TABLE_NAME, QUEUE_URL } = process.env;
 const oneMinuteInMS = 60 * 1000;
 const { sleep } = require('../utils/helper-functions');
@@ -108,7 +108,7 @@ const sendItemsToQueue = async (items) => {
             QueueUrl: QUEUE_URL,
             Entries: items.splice(0, 10).map(item => {
                 return {
-                    Id: uuid.v4(),
+                    Id: randomUUID(),
                     MessageBody: JSON.stringify({ Action: 'DELETE', Key: item })
                 };
             })

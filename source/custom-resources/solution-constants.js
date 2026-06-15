@@ -7,7 +7,7 @@
 
 const CustomResourceHelperFunctions = require('../utils/custom-resource-helper-functions');
 const { appendToStrWithMaxChar } = require('../utils/helper-functions');
-const uuid = require('uuid');
+const { randomUUID } = require('crypto');
 
 /**
  * Generates values to be used within the solution
@@ -22,14 +22,14 @@ exports.handler = async (event, context) => {
  */
 const handleCreate = async function handleCreate(event) {
     const { StackName } = event.ResourceProperties;
-    const solutionInstanceUUID = uuid.v4();
+    const solutionInstanceUUID = randomUUID();
     const formattedStackName = StackName.length < 15 ? StackName : StackName.slice(0, 15);
     return {
         StackSetName: getStackSetName(StackName),
         FormattedStackName: formattedStackName,
         UserImportJobMappingFileBucketPrefix: `${formattedStackName.toLowerCase()}-import-jobs-${solutionInstanceUUID.split('-').pop()}`,
         SolutionInstanceUUID: solutionInstanceUUID,
-        AnonymousDataUUID: uuid.v4()
+        AnonymousDataUUID: randomUUID()
     };
 };
 

@@ -26,7 +26,7 @@ const sqs = new SQS(getOptions());
 const { sleep } = require('../utils/helper-functions');
 const { BACKUP_TABLE_NAME, TYPE_GROUP, TYPE_USER, COGNITO_TPS,
     TYPE_TIMESTAMP, NEW_USERS_QUEUE_URL, NEW_USERS_UPDATES_QUEUE_URL } = process.env;
-const uuid = require('uuid');
+const { randomUUID } = require('crypto');
 const ONE_MINUTE = 1000 * 60;
 
 function filterMessage(msg){
@@ -181,7 +181,7 @@ const sendMessagesToQueue = async (messages, queueUrl) => {
                 QueueUrl: queueUrl,
                 Entries: messages.splice(0, 10).map(msg => {
                     return {
-                        Id: uuid.v4(),
+                        Id: randomUUID(),
                         MessageBody: JSON.stringify(msg)
                     };
                 })

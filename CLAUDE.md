@@ -28,6 +28,7 @@ Webtools fork of the AWS sample "Cognito User Profiles Export Reference Architec
 
 - `@aws-sdk/*` clients are devDependencies on purpose: Lambda functions use the SDK v3 that ships with the Node.js runtime. Only packages listed under `dependencies` (for example `axios`, `moment`, `@smithy/node-http-handler`) are bundled into the zips.
 - `npm audit --omit=dev` should report 0 vulnerabilities in every package. Remaining `npm audit` findings are in jest's own dependency tree (`minimatch` via `glob`/`test-exclude`, `deepmerge` via `jest-config`), dev only, not shipped, with no upstream fix as of Nov 2026. `npm audit fix --force` would downgrade jest; do not run it.
+- Because `update-and-audit.sh` runs a full `npm audit`, those dev-only findings make it exit 1, so every automated dependency PR carries the "Vulnerabilities detected" warning. When reviewing one, check `npm audit --omit=dev` instead.
 - Lambda handlers must stay `async`. The `nodejs24.x` runtime removed callback handlers and `context.done/succeed/fail`, and does not wait for un-awaited promises after the handler returns.
 
 ## Commands

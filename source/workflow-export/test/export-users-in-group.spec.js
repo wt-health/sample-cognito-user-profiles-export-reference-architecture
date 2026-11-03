@@ -217,6 +217,72 @@ describe('groups-invalid UsernameAttributes', function () {
     });
 })
 
+describe('export-users-in-group: waits for group membership writes', function () {
+    let mockCognitoISP3;
+    let mockDocClient3;
+    let ListUsersInGroupCommand3;
+    let BatchWriteCommand3;
+
+    const buildUsers = (count, attributes = []) => Array.from({ length: count }, (_, i) => ({
+        Username: `user-${i}`,
+        Attributes: [{ Name: 'sub', Value: `uuid-${i}` }, ...attributes],
+        Enabled: true,
+        UserStatus: 'CONFIRMED'
+    }));
+
+    const event = {
+        groupName: 'group-name',
+        exportTimestamp: new Date().getTime()
+    };
+
+    beforeEach(() => {
+        jest.resetModules();
+        process.env = Object.assign(process.env, { COGNITO_TPS: '10' });
+        const cognito = require("@aws-sdk/client-cognito-identity-provider");
+        const libDynamodb = require("@aws-sdk/lib-dynamodb");
+        ListUsersInGroupCommand3 = cognito.ListUsersInGroupCommand;
+        BatchWriteCommand3 = libDynamodb.BatchWriteCommand;
+        mockCognitoISP3 = mockClient(cognito.CognitoIdentityProvider);
+        mockDocClient3 = mockClient(libDynamodb.DynamoDBDocumentClient);
+        context.getRemainingTimeInMillis = function () { return 100000; };
+    });
+
+    it('Does not return until every batch write has completed', async function () {
+        mockCognitoISP3.on(ListUsersInGroupCommand3).resolvesOnce({ Users: buildUsers(30) });
+
+        let completedWrites = 0;
+        mockDocClient3.on(BatchWriteCommand3).callsFake(async () => {
+            await new Promise(resolve => setTimeout(resolve, 50));
+            completedWrites++;
+            return { UnprocessedItems: {} };
+        });
+
+        const lambda = require('../export-users-in-group');
+        const resp = await lambda.handler(event, context);
+
+        // 30 users are written in two batches (25 + 5)
+        expect(completedWrites).toBe(2);
+        expect(resp.processedAllUsersInGroup).toBe('Yes');
+    });
+
+    it('Rejects when a batch write fails', async function () {
+        mockCognitoISP3.on(ListUsersInGroupCommand3).resolvesOnce({ Users: buildUsers(1) });
+        mockDocClient3.on(BatchWriteCommand3).rejects(new Error('write failed'));
+
+        const lambda = require('../export-users-in-group');
+        await expect(lambda.handler(event, context)).rejects.toThrow('write failed');
+    });
+
+    it('Rejects when the pseudoUsername cannot be determined', async function () {
+        mockCognitoISP3.on(ListUsersInGroupCommand3).resolvesOnce({ Users: buildUsers(1) });
+        mockDocClient3.on(BatchWriteCommand3).resolves({ UnprocessedItems: {} });
+
+        const lambda = require('../export-users-in-group');
+        await expect(lambda.handler({ ...event, UsernameAttributes: '["email", "phone_number"]' }, context))
+            .rejects.toThrow('Unable to determine the pseudoUsername for the user');
+    });
+})
+
 describe('groups-invalid CognitoTPS', function () {
     beforeEach(() => {
         jest.resetModules();

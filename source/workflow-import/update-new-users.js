@@ -12,7 +12,7 @@ const {
       {
           SQS
       } = require("@aws-sdk/client-sqs"),
-      { NodeHttpHandler } = require("@aws-sdk/node-http-handler");
+      { NodeHttpHandler } = require("@smithy/node-http-handler");
 // 5-second timeout for API calls
 const requestHandler = new NodeHttpHandler({connectionTimeout: 5000, socketTimeout: 5000});
 const cognitoISP = new CognitoIdentityServiceProvider(getOptions(), requestHandler);

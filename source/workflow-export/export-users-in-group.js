@@ -56,7 +56,7 @@ async function userExportHelperLoop2(currentTimeP, oneSecondFromNow, loopParams2
 
             if (response.Users?.length > 0) {
 
-                usersProcessed += countUserProcessed(response, groupName, exportTimestamp);
+                usersProcessed += await countUserProcessed(response, groupName, exportTimestamp);
             } else {
                 console.log('No users were returned');
             }

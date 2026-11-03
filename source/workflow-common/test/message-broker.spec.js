@@ -8,7 +8,7 @@
 // Mock AWS SDK
 const { SNS } = require("@aws-sdk/client-sns");
 const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
-jest.genMockFromModule("@aws-sdk/client-sns");
+jest.createMockFromModule("@aws-sdk/client-sns");
 jest.mock("@aws-sdk/client-sns");
 const mSns = {
     publish: jest.fn()

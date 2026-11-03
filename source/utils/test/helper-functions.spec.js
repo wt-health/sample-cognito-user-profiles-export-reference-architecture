@@ -88,7 +88,8 @@ describe('utils/helper-functions', () => {
         await HelperFunctions.sleep(2, 500);
         const sleepTime = Date.now() - start;
 
-        expect(sleepTime).toBeGreaterThanOrEqual(2500);
+        // setTimeout can fire ~1ms early relative to Date.now()
+        expect(sleepTime).toBeGreaterThanOrEqual(2495);
         expect(sleepTime).toBeLessThan(2600);
     });
 

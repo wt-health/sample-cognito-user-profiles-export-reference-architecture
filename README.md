@@ -22,9 +22,9 @@ For more information, review the [detailed deployment guide](./documentation/cog
 ### 1. Prerequsites
 The following procedures assumes that all of the OS-level configuration has been completed. They are:
 - [AWS Command Line Interface](https://aws.amazon.com/cli/)
-- Node.js 22.x / 24.x
+- Node.js 24.x
 
-The Cognito User Profiles Export Reference Architecture is developed with Node.js for the microservices that run in AWS Lambda. The latest version has been tested with Node.js 22.x/24.x.
+The Cognito User Profiles Export Reference Architecture is developed with Node.js for the microservices that run in AWS Lambda. The Lambda functions run on the `nodejs24.x` runtime and the latest version has been tested with Node.js 24.x.
 
 ### 2. Clone the Cognito User Profiles Export Reference Architecture repository
 Clone the ```sample-cognito-user-profiles-export-reference-architecture``` GitHub repositroy, then make the desired code changes.
@@ -152,7 +152,7 @@ No arguments are required. The script resolves the `source/` directory relative 
 
 ### Requirements
 
-- Node.js 24.x (22.x also supported)
+- Node.js 24.x
 - `npm` available in `PATH`
 
 ## Collection of operational metrics
